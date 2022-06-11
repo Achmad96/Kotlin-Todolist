@@ -8,12 +8,10 @@ val todolists = arrayListOf<String>()
 
 fun main(){
     showMenus()
-    println("\nApp: $APP" +
-            "\nVersion: $VERSION")
 }
 
 fun showMenus(){
-    println("Pilih menu -> (A)dd todo | (R)emove todo | (C)lear todo | (S)how todos | (E)xit program: ")
+    println("\nPilih menu -> (A)dd todo | (R)emove todo | (C)lear todo | (S)how todos | (E)xit program: ")
     var menus = readLine()
     when (menus) {
         "A" -> addTodo()
@@ -36,6 +34,7 @@ fun addTodo(){
     val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
     val time = sdf.format(Date())
     todolists.add("$todo | $time")
+    println(getInformation())
     showMenus()
 }
 
@@ -45,17 +44,24 @@ fun showTodo(){
     for (todo in todolists){
         println("${i++}. $todo")
     }
+    println(getInformation())
     showMenus()
 }
 
 fun clearTodo(){
     todolists.clear()
     println("Berhasil menghapus todolists!")
+    println(getInformation())
     showMenus()
 }
 
 fun removeTodo(i:Int){
     println("Menghapus ( ${todolists.get(i)} ) dari Todolists")
     todolists.removeAt(i)
+    println(getInformation())
     showMenus()
+}
+
+fun getInformation(): String {
+    return "\nApp: $APP" + "\nVersion: $VERSION"
 }
