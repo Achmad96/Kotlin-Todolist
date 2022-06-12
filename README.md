@@ -1,2 +1,2 @@
 ## Kotlin-Todolist
-**Aplikasi Todolist** sederhana dengan menggunakan bahas pemograman **Kotlin**. 
+**Aplikasi Todolist** sederhana dengan menggunakan bahasa pemograman **Kotlin**. 
