@@ -44,8 +44,10 @@ fun showMenus() {
             checkTodo()
             println("Masukkan nomer yang akan di ubah:")
             val index = readLine()!!.toInt()
+            val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+            val time = sdf.format(Date())
             println("Mengganti '${todolist.get(index - 1)}' -> ")
-            editTodo(index, readLine()!!)
+            editTodo(index, readLine()!!, time)
         }
         "ex", "exit", "exit program" -> exitProcess(0)
         else -> {
@@ -69,7 +71,7 @@ fun removeTodo(i: Int){
         todolist.removeAt(i - 1)
         readTodo()
         showMenus()
-    }catch (e:IndexOutOfBoundsException){
+    } catch (e:IndexOutOfBoundsException) {
         println("Nomor $i tidak tersedia.")
         showMenus()
     }
@@ -88,16 +90,14 @@ fun showTodo(){
     for (todo in todolist) println("${i++}. $todo")
     showMenus()
 }
-fun editTodo(i: Int, newTodo: String){
+fun editTodo(i: Int, newTodo: String, time: String){
     try {
         readTodoFile()
-        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-        val time = sdf.format(Date())
         println("Berhasil mengubah '${todolist.get(i - 1)}' -> '${newTodo} | ${time}'")
         todolist.set(i - 1, "${newTodo} | ${time}")
         readTodo()
         showMenus()
-    }catch (e:IndexOutOfBoundsException){
+    } catch (e:IndexOutOfBoundsException) {
         println("Nomor $i tidak tersedia.")
         showMenus()
     }
