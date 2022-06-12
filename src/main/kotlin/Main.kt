@@ -7,16 +7,16 @@ const val VERSION = "0.0.1"
 val todolist = arrayListOf<String>()
 
 fun main(){
-    showMenus()
-}
-
-fun showMenus() {
     println(
         "\nApp: $APP " +
                 "\nversion: $VERSION\n"
     )
+    showMenus()
+}
 
-    println("\nPilih menu -> (A)dd todo | (R)emove todo | (C)lear todo | (S)how todos | (E)xit program: ")
+fun showMenus() {
+    Thread.sleep(1000)
+    println("\nPilih menu -> (A)dd todo | (R)emove todo | (C)lear todo | (S)how todos | (Ed)it todo | (Ex)it program: ")
     var menus = readLine()
     when (menus?.lowercase(Locale.getDefault())) {
         "a", "add todo" -> addTodo()
@@ -25,8 +25,14 @@ fun showMenus() {
             removeTodo(readLine()!!.toInt())
         }
         "c", "clear todos" -> clearTodo()
+        "ed", "edit" ->{
+            println("Masukkan nomer yang akan di ubah:")
+            val index = readLine()!!.toInt()
+            println("Masukkan todo yang akan di tambahkan:")
+            editTodo(index, readLine()!!)
+        }
+        "ex", "exit", "exit program" -> exitProcess(0)
         "s", "show todo" -> showTodo()
-        "e", "exit", "exit program" -> exitProcess(0)
         else -> {
             showMenus()
         }
@@ -62,8 +68,24 @@ fun clearTodo(){
     showMenus()
 }
 
-fun removeTodo(i:Int){
-    println("Menghapus ( ${todolist.get(i)} ) dari todolist")
-    todolist.removeAt(i)
-    showMenus()
+fun removeTodo(i: Int){
+    try {
+        println("Menghapus ( ${todolist.get(i)} ) dari todolist")
+        todolist.removeAt(i)
+        showMenus()
+    }catch (e:IndexOutOfBoundsException){
+        println("Nomor $i tidak tersedia.")
+        showMenus()
+    }
+}
+fun editTodo(i: Int, newTodo: String){
+    try {
+        println("Berhasil mengubah '${todolist.get(i)}' -> '${newTodo}'")
+        todolist.removeAt(i)
+        todolist.set(i, newTodo)
+        showMenus()
+    }catch (e:IndexOutOfBoundsException){
+        println("Nomor $i tidak tersedia.")
+        showMenus()
+    }
 }
