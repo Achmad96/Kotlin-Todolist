@@ -9,7 +9,7 @@ val todolist = arrayListOf<String>()
 val file = File("Todolist.txt")
 
 fun main(){
-    println(
+    print(
         "\nApp: $APP " +
                 "\nversion: $VERSION\n"
     )
@@ -18,12 +18,12 @@ fun main(){
 
 fun showMenus() {
     Thread.sleep(500)
-    println("\nPilih menu -> (A)dd todo | (R)emove todo | (C)lear todos " +
-            "\n| (S)how todos | (Ed)it todo | (Ex)it program: ")
+    print("\nPilih menu -> (A)dd todo | (R)emove todo | (C)lear todos " +
+            "\n\t| (S)how todos | (Ed)it todo | (Ex)it program: ")
     var menus = readLine()
     when (menus?.lowercase(Locale.getDefault())) {
         "a", "add", "add todo" -> {
-            println("Masukkan isi todo -> ")
+            print("Masukkan isi todo -> ")
             val todo = readLine()
             val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
             val time = sdf.format(Date())
@@ -32,13 +32,13 @@ fun showMenus() {
         }
         "r", "remove", "remove todo" -> {
             checkTodo()
-            println("Masukkan nomer todo yang akan di hapus:")
+            print("Masukkan nomer todo yang akan di hapus: ")
             println(removeTodo(readLine()!!.toInt()))
             showMenus()
         }
         "c", "clear", "clear todos" -> {
             checkTodo()
-            println(clearTodo())
+            print(clearTodo())
             showMenus()
         }
         "s", "show", "show todos" ->{
@@ -49,11 +49,11 @@ fun showMenus() {
         }
         "ed", "edit", "edit todo" -> {
             checkTodo()
-            println("Masukkan nomer yang akan di ubah:")
+            print("Masukkan nomer yang akan di ubah: ")
             val index = readLine()!!.toInt()
             val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
             val time = sdf.format(Date())
-            println("Mengganti '${todolist.get(index - 1)}' -> ")
+            print("Mengganti '${todolist.get(index - 1)}' -> ")
             println(editTodo(index, readLine()!!, time))
             showMenus()
         }
@@ -74,10 +74,11 @@ fun addTodo(todo: String, time: String): String {
 
 fun removeTodo(i: Int): String{
     try {
+        val todoRemoved = todolist.get(i-1)
         todolist.removeAt(i - 1)
         readTodo()
-        return "Menghapus ( ${todolist.get(i - 1)} ) dari todolist"
-    } catch (e:IndexOutOfBoundsException) {
+        return "Menghapus ( ${todoRemoved} ) dari todolist"
+    } catch (e : IndexOutOfBoundsException) {
         return "Nomor $i tidak tersedia."
     }
 }
@@ -95,12 +96,12 @@ fun showTodo(){
 }
 fun editTodo(i: Int, newTodo: String, time: String): String{
     try {
-        val lastTodo :String = todolist.get(i - 1)
+        val lastTodo : String = todolist.get(i - 1)
         readTodoFile()
         todolist.set(i - 1, "${newTodo} | ${time}")
         readTodo()
-        return "Berhasil mengubah ( ${lastTodo} ) -> ( ${newTodo} | ${time} )"
-    } catch (e:IndexOutOfBoundsException) { return "Nomor $i tidak tersedia." }
+        return "Berhasil mengubah ( ${lastTodo} ) -> ( ${todolist.get(i - 1)} )"
+    } catch (e : IndexOutOfBoundsException) { return "Nomor $i tidak tersedia." }
 }
 
 fun readTodo(){
