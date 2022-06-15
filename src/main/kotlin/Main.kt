@@ -31,12 +31,14 @@ fun showMenus() {
             showMenus()
         }
         "r", "remove", "remove todo" -> {
+            readTodoFile()
             checkTodo()
             print("Masukkan nomer todo yang akan di hapus: ")
             println(removeTodo(readLine()!!.toInt()))
             showMenus()
         }
         "c", "clear", "clear todos" -> {
+            readTodoFile()
             checkTodo()
             print(clearTodo())
             showMenus()
@@ -48,6 +50,7 @@ fun showMenus() {
             showMenus()
         }
         "ed", "edit", "edit todo" -> {
+            readTodoFile()
             checkTodo()
             print("Masukkan nomer yang akan di ubah: ")
             val index = readLine()!!.toInt()
