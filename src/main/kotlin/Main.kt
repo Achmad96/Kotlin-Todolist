@@ -4,60 +4,56 @@ import java.util.*
 import kotlin.system.exitProcess
 
 const val APP = "Todolist-Application"
-const val VERSION = "0.0.1"
+const val VERSION = "0.0.5"
 val todolist = arrayListOf<String>()
 val file = File("Todolist.txt")
 
 fun main(){
     print(
         "\nApp: $APP " +
-                "\nversion: $VERSION\n"
+        "\nversion: $VERSION\n"
     )
     showMenus()
 }
 
 fun showMenus() {
-    Thread.sleep(500)
-    print("\nPilih menu -> (A)dd todo | (R)emove todo | (C)lear todos " +
-            "\n\t| (S)how todos | (Ed)it todo | (Ex)it program: ")
+    print("\nMenu (A)dd todo, (R)emove todo, (C)lear todos, (S)how todos, (Ed)it todo, (Ex)it program: ")
     val menus = readLine()
     when (menus?.lowercase(Locale.getDefault())) {
         "a", "add", "add todo" -> {
-            print("Masukkan isi todo -> ")
+            print("Todo: ")
             val todo = readLine()
             val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
             val time = sdf.format(Date())
             println(addTodo(todo!!, time))
+            getTodos()
             showMenus()
         }
         "r", "remove", "remove todo" -> {
-            readTodoFile()
-            checkTodo()
-            print("Masukkan nomer todo yang akan di hapus: ")
+            if (todolist.isEmpty()) return
+            print("Nomer todo: ")
             println(removeTodo(readLine()!!.toInt()))
+            getTodos()
             showMenus()
         }
         "c", "clear", "clear todos" -> {
-            readTodoFile()
-            checkTodo()
-            print(clearTodo())
+            println(clearTodo())
             showMenus()
         }
-        "s", "show", "show todos" ->{
-            readTodoFile()
-            checkTodo()
+        "s", "show", "show todos" -> {
+            if (todolist.isEmpty()) return
             showTodo()
             showMenus()
         }
         "ed", "edit", "edit todo" -> {
-            readTodoFile()
-            checkTodo()
-            print("Masukkan nomer yang akan di ubah: ")
+            if (todolist.isEmpty()) return
+            print("Nomer todo: ")
             val index = readLine()!!.toInt()
             val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
             val time = sdf.format(Date())
             print("Mengganti '${todolist[index - 1]}' -> ")
             println(editTodo(index, readLine()!!, time))
+            getTodos()
             showMenus()
         }
         "ex", "exit", "exit program" -> exitProcess(0)
@@ -71,18 +67,18 @@ fun showMenus() {
 fun addTodo(todo: String, time: String): String {
     if (!file.exists()) file.createNewFile()
     todolist.add("$todo | $time")
-    file.appendText("${todolist[todolist.lastIndex]}\n")
     return "Berhasil menambahkan ( ${todolist[todolist.lastIndex]} )"
 }
 
 fun removeTodo(i: Int): String{
     return try {
-        val todoRemoved = todolist[i-1]
+        val todoRemoved = todolist[i - 1]
         todolist.removeAt(i - 1)
-        readTodo()
         "Menghapus ( $todoRemoved ) dari todolist"
     } catch (e : IndexOutOfBoundsException) {
         "Nomor $i tidak tersedia."
+    } catch (e: NumberFormatException) {
+        "Error: format number tidak diketahui."
     }
 }
 
@@ -94,42 +90,36 @@ fun clearTodo(): String{
 
 fun showTodo(){
     var i = 1
-    println("\nTodo(s):")
-    for (todo in todolist) println("${i++}. $todo")
-}
-fun editTodo(i: Int, newTodo: String, time: String): String{
-    return try {
-        val lastTodo : String = todolist[i - 1]
-        readTodoFile()
-        todolist[i - 1] = "$newTodo | $time"
-        readTodo()
-        "Berhasil mengubah ( $lastTodo ) -> ( ${todolist[i - 1]} )"
-    } catch (e : IndexOutOfBoundsException) {
-        "Nomor $i tidak tersedia."
+    println("LIST TODO")
+    for (todo in todolist) {
+        val todos = todo.split(" | ");
+        println("${i++}. ${todos[0]}")
     }
 }
 
-fun readTodo(){
-    file.delete()
-    file.createNewFile()
-    if (todolist.isNotEmpty())
-        for (todo in todolist) {
-            file.appendText("${todo}\n")
-        }
+fun editTodo(i: Int, newTodo: String, time: String): String{
+    return try {
+        val previousTodo : String = todolist[i - 1]
+        todolist[i - 1] = "$newTodo | $time"
+        "Berhasil mengubah ( $previousTodo ) -> ( ${todolist[i - 1]} )"
+    } catch (e : IndexOutOfBoundsException) {
+        "Nomor $i tidak tersedia."
+    } catch (e: NumberFormatException) {
+        "Error: format number tidak diketahui."
+    }
 }
 
-fun readTodoFile(){
+fun getTodos(){
+    file.delete()
+    file.createNewFile()
+    for (todo in todolist)
+        file.appendText("${todo}\n")
+}
+
+fun getTodosInFile(){
     if (!file.exists()) file.createNewFile()
     todolist.clear()
     for (todo in file.readLines()) {
-        todolist.add(todo)
-    }
-}
-
-fun checkTodo(){
-    if (todolist.size == 0 || !file.exists()){
-        println("Todo(s) tidak tersedia.")
-        showMenus()
-        return
+        todolist.add(todo);
     }
 }
